@@ -121,15 +121,25 @@ style: |
 **Apprenant :** <span class="highlight">Mehdi Ben Taleb</span>  
 **Filière :** Développement Mobile et Web
 
+
+
 ---
 
 ## Sommaire
 
 <div class="sommaire-grid">
-  <div class="sommaire-item"><div class="sommaire-num">1</div><div class="sommaire-text"> Tâches Terminées </div></div>
-  <div class="sommaire-item"><div class="sommaire-num">2</div><div class="sommaire-text"> Tâches en Cours </div></div>
-  <div class="sommaire-item"><div class="sommaire-num">3</div><div class="sommaire-text"> Étapes Suivantes </div></div>
-  <div class="sommaire-item"><div class="sommaire-num">4</div><div class="sommaire-text"> Liens Utiles </div></div>
+  <div class="sommaire-item"><div class="sommaire-num">1</div><div class="sommaire-text"> Les tâches terminées </div></div>
+  <div class="sommaire-item"><div class="sommaire-num">2</div><div class="sommaire-text"> Les tâches en cours </div></div>
+  <div class="sommaire-item"><div class="sommaire-num">3</div><div class="sommaire-text"> Les étapes suivantes </div></div>
+  <div class="sommaire-item"><div class="sommaire-num">4</div><div class="sommaire-text"> Liens et Ressources </div></div>
+</div>
+
+---
+
+## Contexte
+
+<div class="dt-card" style="margin-top: 20px; font-size: 0.85em;">
+  <p><strong>Contexte :</strong> Cette session s'inscrit dans le cadre du module <strong>Réseaux et Déploiement Web</strong>. L'objectif est de comprendre l'infrastructure physique et logique nécessaire pour héberger des applications web modernes.</p>
 </div>
 
 ---
@@ -138,9 +148,9 @@ style: |
 
 <div class="dt-card">
   <ul>
-    <li><strong>Tutoriel :</strong> Ubuntu</li>
-    <li><strong>Tutoriel :</strong> LAN & équipements</li>
-    <li><strong>Flyer :</strong> Communication</li>
+    <li><strong>1 - Tutoriel :</strong> Ubuntu</li>
+    <li><strong>1 - Tutoriel :</strong> LAN & équipements</li>
+    <li><strong>1 - Flyer :</strong> Communication</li>
   </ul>
 </div>
 
@@ -150,7 +160,7 @@ style: |
 
 <div class="dt-card" style="border-top-color: #f59e0b;">
   <ul>
-    <li><strong>Tutoriel :</strong> Adressage IP</li>
+    <li><strong>1 - Tutoriel :</strong> Adressage IP</li>
   </ul>
 </div>
 
@@ -158,11 +168,11 @@ style: |
 
 ## 3. Les étapes suivantes
 
-<div class="sommaire-grid" style="grid-template-columns: 1fr; font-size: 0.85em;">
-  <div class="sommaire-item"><div class="sommaire-num">2</div><div class="sommaire-text"> Organisation : Inscription des apprenants </div></div>
-  <div class="sommaire-item"><div class="sommaire-num">2</div><div class="sommaire-text"> Lab : Ubuntu Linux (Installation & Utilisation) </div></div>
-  <div class="sommaire-item"><div class="sommaire-num">2</div><div class="sommaire-text"> Lab : Configuration LAN et Interconnexion Réseau </div></div>
-  <div class="sommaire-item"><div class="sommaire-num">3</div><div class="sommaire-text"> Lab : Déploiement Laravel </div></div>
+<div class="sommaire-grid" style="grid-template-columns: 1fr; font-size: 0.8em;">
+  <div class="sommaire-item"><div class="sommaire-num">2</div><div class="sommaire-text"> Organisation : Inscription des apprenants (À faire) </div></div>
+  <div class="sommaire-item"><div class="sommaire-num">2</div><div class="sommaire-text"> Lab : Installation et Utilisation d'Ubuntu Linux (À faire) </div></div>
+  <div class="sommaire-item"><div class="sommaire-num">2</div><div class="sommaire-text"> Lab : Configuration LAN et Interconnexion Réseau (À faire) </div></div>
+  <div class="sommaire-item"><div class="sommaire-num">3</div><div class="sommaire-text"> Lab : Déploiement Laravel (À faire) </div></div>
 </div>
 
 ---
@@ -170,9 +180,10 @@ style: |
 ## 3. Les étapes suivantes (Suite)
 
 <div class="sommaire-grid" style="grid-template-columns: 1fr; font-size: 0.8em;">
-  <div class="sommaire-item"><div class="sommaire-num">3</div><div class="sommaire-text"> Atelier : Installation Linux & LAN </div></div>
-  <div class="sommaire-item"><div class="sommaire-num">10</div><div class="sommaire-text"> Live coding (Évaluation : N2-Adapter) </div></div>
-  <div class="sommaire-item"><div class="sommaire-num">11</div><div class="sommaire-text"> Présentation Finale (Évaluation : N3-Transposer) </div></div>
+  <div class="sommaire-item"><div class="sommaire-num">3</div><div class="sommaire-text"> Atelier : Installation Linux (À faire) </div></div>
+  <div class="sommaire-item"><div class="sommaire-num">3</div><div class="sommaire-text"> Atelier : LAN (À faire) </div></div>
+  <div class="sommaire-item"><div class="sommaire-num">10</div><div class="sommaire-text"> Live coding (Phase d'évaluation : N2-Adapter) </div></div>
+  <div class="sommaire-item"><div class="sommaire-num">11</div><div class="sommaire-text"> Réalisation et présentation (Phase d'évaluation : N3-Transposer) </div></div>
 </div>
 
 ---
