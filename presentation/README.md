@@ -115,11 +115,10 @@ style: |
   <img src="images/logo-solicode.png" alt="Logo Right">
 </div>
 
-# Projet de Fin de Formation
-### Digitalisation des Services de Coaching : Développement d’une Solution Web Intégrée de Gestion et de Branding
-
-**Réalisé par :** <span class="highlight">Mehdi Bentaleb</span>  
-**Encadré par :** <span class="highlight">M. ESSARRAJ Fouad</span>  
+# Réseaux et Déploiement Web
+### Présentation de la session - Réseaux et Déploiement Web
+**Projet :** <span class="highlight">[Fin C6] Réseaux et Déploiement Web</span>  
+**Apprenant :** <span class="highlight">Mehdi Ben Taleb</span>  
 **Filière :** Développement Mobile et Web
 
 ---
@@ -127,11 +126,60 @@ style: |
 ## Sommaire
 
 <div class="sommaire-grid">
-  <div class="sommaire-item"><div class="sommaire-num">1</div><div class="sommaire-text"> -- </div></div>
-  <div class="sommaire-item"><div class="sommaire-num">2</div><div class="sommaire-text"> -- </div></div>
-  <div class="sommaire-item"><div class="sommaire-num">3</div><div class="sommaire-text"> -- </div></div>
-  <div class="sommaire-item"><div class="sommaire-num">4</div><div class="sommaire-text"> -- </div></div>
-  <div class="sommaire-item"><div class="sommaire-num">5</div><div class="sommaire-text"> -- </div></div>
+  <div class="sommaire-item"><div class="sommaire-num">1</div><div class="sommaire-text"> Tâches Terminées </div></div>
+  <div class="sommaire-item"><div class="sommaire-num">2</div><div class="sommaire-text"> Tâches en Cours </div></div>
+  <div class="sommaire-item"><div class="sommaire-num">3</div><div class="sommaire-text"> Étapes Suivantes </div></div>
+  <div class="sommaire-item"><div class="sommaire-num">4</div><div class="sommaire-text"> Liens Utiles </div></div>
 </div>
 
 ---
+
+## 1. Les tâches terminées
+
+<div class="dt-card">
+  <ul>
+    <li><strong>Tutoriel :</strong> Ubuntu</li>
+    <li><strong>Tutoriel :</strong> LAN & équipements</li>
+    <li><strong>Flyer :</strong> Communication</li>
+  </ul>
+</div>
+
+---
+
+## 2. Les tâches en cours
+
+<div class="dt-card" style="border-top-color: #f59e0b;">
+  <ul>
+    <li><strong>Tutoriel :</strong> Adressage IP</li>
+  </ul>
+</div>
+
+---
+
+## 3. Les étapes suivantes
+
+<div class="sommaire-grid" style="grid-template-columns: 1fr; font-size: 0.85em;">
+  <div class="sommaire-item"><div class="sommaire-num">2</div><div class="sommaire-text"> Organisation : Inscription des apprenants </div></div>
+  <div class="sommaire-item"><div class="sommaire-num">2</div><div class="sommaire-text"> Lab : Ubuntu Linux (Installation & Utilisation) </div></div>
+  <div class="sommaire-item"><div class="sommaire-num">2</div><div class="sommaire-text"> Lab : Configuration LAN et Interconnexion Réseau </div></div>
+  <div class="sommaire-item"><div class="sommaire-num">3</div><div class="sommaire-text"> Lab : Déploiement Laravel </div></div>
+</div>
+
+---
+
+## 3. Les étapes suivantes (Suite)
+
+<div class="sommaire-grid" style="grid-template-columns: 1fr; font-size: 0.8em;">
+  <div class="sommaire-item"><div class="sommaire-num">3</div><div class="sommaire-text"> Atelier : Installation Linux & LAN </div></div>
+  <div class="sommaire-item"><div class="sommaire-num">10</div><div class="sommaire-text"> Live coding (Évaluation : N2-Adapter) </div></div>
+  <div class="sommaire-item"><div class="sommaire-num">11</div><div class="sommaire-text"> Présentation Finale (Évaluation : N3-Transposer) </div></div>
+</div>
+
+---
+
+## Liens et Ressources
+
+<div class="dt-card">
+  <p><strong>Tutoriel :</strong> Outils réseau</p>
+  <p><strong>Code source :</strong> <a href="https://github.com/BenTaleb-Mehdi/Networks--Web-Deployment/blob/develop/LAN%20and%20equipements/presentation.md">GitHub dépôt</a></p>
+</div>
