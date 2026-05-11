@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual Laravel Deployment</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #0d1b2a;
+    --bg-card: #162032;
+    --bg-code: #080f18;
+    --cyan: #38bdf8;
+    --teal: #2dd4bf;
+    --white: #f0f6ff;
+    --muted: #7a90a8;
+    --red: #f87171;
+    --border: rgba(56,189,248,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg-deep);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--white);
+    height: 100vh;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  /* Slide container */
+  .deck {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    padding: 60px 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(60px);
+    transition: opacity 0.45s cubic-bezier(.4,0,.2,1), transform 0.45s cubic-bezier(.4,0,.2,1);
+  }
+
+  .slide.active {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateX(0);
+  }
+
+  .slide.exit {
+    opacity: 0;
+    transform: translateX(-60px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  /* Slide backgrounds */
+  .slide::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 80% 20%, rgba(56,189,248,0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 10% 80%, rgba(45,212,191,0.04) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  /* Cover slide */
+  .slide-cover {
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+  }
+
+  .slide-cover::before {
+    background: radial-gradient(ellipse at 50% 40%, rgba(56,189,248,0.1) 0%, transparent 70%);
+  }
+
+  .cover-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--teal);
+    opacity: 0.8;
+  }
+
+  .cover-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(42px, 6vw, 80px);
+    font-weight: 800;
+    line-height: 1.05;
+    color: var(--white);
+  }
+
+  .cover-title span {
+    color: var(--cyan);
+  }
+
+  .cover-sub {
+    font-size: 16px;
+    color: var(--muted);
+    font-weight: 300;
+    margin-top: 8px;
+  }
+
+  .cover-badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--cyan);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 8px 22px;
+    margin-top: 16px;
+    background: rgba(56,189,248,0.05);
+  }
+
+  /* Section heading */
+  .slide-heading {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(22px, 3vw, 36px);
+    font-weight: 800;
+    color: var(--cyan);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 40px;
+    position: relative;
+  }
+
+  .slide-heading::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 3px;
+    background: var(--cyan);
+    margin-top: 10px;
+    border-radius: 2px;
+  }
+
+  /* Cards grid */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px 24px;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .card:hover {
+    border-color: rgba(56,189,248,0.35);
+    transform: translateY(-2px);
+  }
+
+  .card-icon {
+    font-size: 28px;
+    margin-bottom: 16px;
+  }
+
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 10px;
+  }
+
+  .card-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  /* Two-column layout */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+
+  .col-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+
+  .col-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 20px;
+    font-weight: 300;
+  }
+
+  /* Code block */
+  .code-block {
+    background: var(--bg-code);
+    border-left: 3px solid var(--cyan);
+    border-radius: 8px;
+    padding: 20px 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--teal);
+    line-height: 1.8;
+    white-space: pre;
+    overflow-x: auto;
+  }
+
+  /* Steps list */
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-top: 8px;
+  }
+
+  .step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.5;
+    font-weight: 300;
+  }
+
+  .step-item .icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* Inline badge */
+  .badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: rgba(45,212,191,0.12);
+    color: var(--teal);
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+
+  /* Alert */
+  .alert {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 24px;
+    color: var(--red);
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  /* Final slide */
+  .slide-final {
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+  }
+
+  .final-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(40px, 6vw, 72px);
+    font-weight: 800;
+    color: var(--cyan);
+  }
+
+  .final-div {
+    width: 60px;
+    height: 3px;
+    background: var(--cyan);
+    border-radius: 2px;
+    margin: 8px auto;
+  }
+
+  .final-text {
+    font-size: 16px;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  .final-text strong {
+    color: var(--white);
+    font-weight: 600;
+  }
+
+  .checkmark {
+    font-size: 40px;
+    margin-top: 8px;
+    color: var(--teal);
+  }
+
+  /* Navigation */
+  nav {
+    position: fixed;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    z-index: 100;
+    background: rgba(13,27,42,0.85);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 10px 24px;
+    backdrop-filter: blur(12px);
+  }
+
+  .nav-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 18px;
+    transition: color 0.2s;
+    line-height: 1;
+    padding: 2px 6px;
+  }
+
+  .nav-btn:hover { color: var(--cyan); }
+  .nav-btn:disabled { opacity: 0.25; cursor: default; }
+
+  .slide-counter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    min-width: 48px;
+    text-align: center;
+  }
+
+  /* Dots */
+  .dots {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--muted);
+    opacity: 0.4;
+    cursor: pointer;
+    transition: opacity 0.2s, background 0.2s, width 0.2s;
+  }
+
+  .dot.active {
+    opacity: 1;
+    background: var(--cyan);
+    width: 18px;
+    border-radius: 3px;
+  }
+
+  /* Progress bar */
+  .progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--cyan), var(--teal));
+    transition: width 0.4s ease;
+    z-index: 200;
+    border-radius: 0 2px 2px 0;
+    box-shadow: 0 0 8px rgba(56,189,248,0.5);
+  }
+
+  /* Step number chip */
+  .step-chip {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--cyan);
+    background: rgba(56,189,248,0.1);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 10px;
+    margin-bottom: 16px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* Inline code */
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: rgba(56,189,248,0.1);
+    color: var(--teal);
+    padding: 2px 7px;
+    border-radius: 4px;
+  }
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<div class="deck" id="deck">
+
+  <!-- Slide 1: Cover -->
+  <div class="slide slide-cover active" id="slide-0">
+    <div class="cover-eyebrow">Production Environment Setup</div>
+    <h1 class="cover-title">Manual <span>Laravel</span><br>Deployment</h1>
+    <p class="cover-sub">Step-by-Step Installation &amp; Configuration Guide</p>
+    <span class="cover-badge">Nginx + PHP-FPM</span>
+  </div>
+
+  <!-- Slide 2: What are we installing -->
+  <div class="slide" id="slide-1">
+    <h2 class="slide-heading">What Are We Installing?</h2>
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">🗄️</div>
+        <div class="card-title">Nginx</div>
+        <div class="card-desc">The Web Server. It receives HTTP requests and manages static files and security.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚙️</div>
+        <div class="card-title">PHP-FPM</div>
+        <div class="card-desc">The Engine. It processes the Laravel PHP code in the background for Nginx.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔑</div>
+        <div class="card-title">Permissions</div>
+        <div class="card-desc">The Security. Ensuring Nginx has the right to write logs and cache files.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 3: Step 1 -->
+  <div class="slide" id="slide-2">
+    <div class="step-chip">Step 01</div>
+    <h2 class="slide-heading">System Prep</h2>
+    <div class="two-col">
+      <div>
+        <div class="col-label">Update &amp; Install Core</div>
+        <div class="col-desc">Before installing anything, we must update the package list and install the main servers.</div>
+        <div class="code-block">sudo apt update
+sudo apt install nginx php-fpm -y</div>
+      </div>
+      <div class="steps">
+        <div class="step-item"><span class="icon">🔄</span> Refresh the repository list.</div>
+        <div class="step-item"><span class="icon">⬇️</span> Install the Nginx binary.</div>
+        <div class="step-item"><span class="icon">🔧</span> Install the FastCGI Process Manager.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 4: Step 2 -->
+  <div class="slide" id="slide-3">
+    <div class="step-chip">Step 02</div>
+    <h2 class="slide-heading">Laravel Requirements</h2>
+    <p style="color:var(--muted);font-size:15px;margin-bottom:24px;font-weight:300;">Laravel requires specific PHP extensions to handle database, text, and security operations.</p>
+    <div class="code-block">sudo apt install php-mysql php-mbstring php-xml php-bcmath php-curl php-zip -y</div>
+    <div class="cards" style="margin-top:24px;">
+      <div class="card">
+        <div class="card-desc"><strong style="color:var(--white)">PDO:</strong> Database connection.</div>
+      </div>
+      <div class="card">
+        <div class="card-desc"><strong style="color:var(--white)">Mbstring:</strong> Text processing.</div>
+      </div>
+      <div class="card">
+        <div class="card-desc"><strong style="color:var(--white)">XML/JSON:</strong> Data format support.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 5: Step 3 -->
+  <div class="slide" id="slide-4">
+    <div class="step-chip">Step 03</div>
+    <h2 class="slide-heading">App Deployment</h2>
+    <div class="two-col">
+      <div>
+        <div class="col-label">Move Your Files</div>
+        <div class="col-desc">Place your Laravel project in the standard web directory <code>/var/www/</code>.</div>
+        <div class="code-block">sudo mv ~/my-project /var/www/laravel-app</div>
+      </div>
+      <div class="steps">
+        <div class="step-item"><span class="icon">📁</span> Create a clean project folder.</div>
+        <div class="step-item"><span class="icon">📋</span> Move files from home to /var/www.</div>
+        <div class="step-item"><span class="icon">💻</span> Use <code>composer</code> if installing fresh.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 6: Step 4 -->
+  <div class="slide" id="slide-5">
+    <div class="step-chip">Step 04</div>
+    <h2 class="slide-heading">The Server Block</h2>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:20px;font-weight:300;">Create a configuration file in <code>/etc/nginx/sites-available/laravel</code>. Point the <strong style="color:var(--white)">root</strong> to the public folder.</p>
+    <div class="code-block">server {
+    listen 80;
+    server_name monprojet.local;
+    root /var/www/laravel-app/public;
+    index index.php;
+    location / { try_files $uri $uri/ /index.php?$query_string; }
+}</div>
+  </div>
+
+  <!-- Slide 7: Step 5 -->
+  <div class="slide" id="slide-6">
+    <div class="step-chip">Step 05</div>
+    <h2 class="slide-heading">Enabling the Site</h2>
+    <div class="two-col">
+      <div>
+        <div class="col-label">Symbolic Link &amp; Reload</div>
+        <div class="col-desc">Tell Nginx that this site is now "enabled" and restart the service.</div>
+        <div class="code-block">sudo ln -s /etc/nginx/sites-available/laravel \
+  /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx</div>
+      </div>
+      <div class="steps">
+        <div class="step-item"><span class="icon">🔗</span> Link available sites to enabled sites.</div>
+        <div class="step-item"><span class="icon">🔍</span> <code>nginx -t</code> checks for syntax errors.</div>
+        <div class="step-item"><span class="icon">▶️</span> Reload applies changes without downtime.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 8: Step 6 -->
+  <div class="slide" id="slide-7">
+    <div class="step-chip">Step 06</div>
+    <h2 class="slide-heading">Folder Permissions</h2>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:20px;font-weight:300;">Give the web server user (<code>www-data</code>) ownership and write access to specific folders.</p>
+    <div class="code-block">sudo chown -R www-data:www-data /var/www/laravel-app
+sudo chmod -R 775 /var/www/laravel-app/storage
+sudo chmod -R 775 /var/www/laravel-app/bootstrap/cache</div>
+    <div class="alert">⚠️ Without this, you will get a "Permission Denied" error.</div>
+  </div>
+
+  <!-- Slide 9: Step 7 -->
+  <div class="slide" id="slide-8">
+    <div class="step-chip">Step 07</div>
+    <h2 class="slide-heading">Final Test</h2>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:20px;margin-top:20px;">
+      <div style="font-size:56px;">🌐</div>
+      <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:var(--white);">Access Your Project</div>
+      <div style="color:var(--muted);font-size:14px;font-weight:300;">Open your browser and type your VM's IP address or your local URL:</div>
+      <div class="code-block" style="font-size:18px;text-align:center;padding:20px 60px;color:var(--teal);">http://monprojet.local</div>
+      <div style="color:var(--muted);font-size:14px;font-weight:300;">If you see the Laravel logo, your manual deployment is successful!</div>
+    </div>
+  </div>
+
+  <!-- Slide 10: Final -->
+  <div class="slide slide-final" id="slide-9">
+    <div class="final-title">Lab Complete!</div>
+    <div class="final-div"></div>
+    <p class="final-text">You have successfully mastered the <strong>LEMP</strong> stack configuration.</p>
+    <p class="final-text" style="margin-top:8px;">Don't forget to submit your Markdown Guide.</p>
+    <div class="checkmark">✔</div>
+  </div>
+
+</div>
+
+<!-- Navigation -->
+<nav>
+  <button class="nav-btn" id="prev-btn" disabled>&#8592;</button>
+  <div class="dots" id="dots"></div>
+  <span class="slide-counter" id="counter">1 / 10</span>
+  <button class="nav-btn" id="next-btn">&#8594;</button>
+</nav>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  const dotsEl = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+  const progress = document.getElementById('progress');
+
+  // Create dots
+  for (let i = 0; i < total; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  }
+
+  function updateUI() {
+    counter.textContent = `${current + 1} / ${total}`;
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === total - 1;
+    document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === current));
+    progress.style.width = `${((current + 1) / total) * 100}%`;
+  }
+
+  function goTo(index) {
+    if (index === current) return;
+    slides[current].classList.remove('active');
+    slides[current].classList.add('exit');
+    setTimeout(() => slides[current < index ? current : current].classList.remove('exit'), 350);
+    current = index;
+    slides[current].classList.add('active');
+    slides[current].classList.remove('exit');
+    updateUI();
+  }
+
+  prevBtn.onclick = () => current > 0 && goTo(current - 1);
+  nextBtn.onclick = () => current < total - 1 && goTo(current + 1);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextBtn.click();
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevBtn.click();
+  });
+
+  updateUI();
+</script>
+</body>
+</html>
